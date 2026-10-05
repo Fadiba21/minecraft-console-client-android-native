@@ -1,0 +1,5 @@
+UI SFX audio source: https://github.com/romainsimon/uisfx
+Pack: soft
+Audio license: CC0 1.0 Universal (public domain dedication)
+Code license: MIT
+Integrated for MCC Droid UI feedback.

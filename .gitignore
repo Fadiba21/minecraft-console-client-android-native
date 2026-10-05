@@ -1,0 +1,13 @@
+*.iml
+.gradle/
+build/
+local.properties
+.idea/
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+mcc-src/
+signing/release.keystore
+app/src/main/assets/mcc-bundle.zip
+app/src/main/assets/bundle-info.json
