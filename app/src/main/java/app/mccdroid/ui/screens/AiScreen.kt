@@ -77,6 +77,7 @@ fun AiScreen(nav: Nav, onClose: (() -> Unit)? = null) {
         AiSession.prompt = ""
         AiSession.busy = true
         AiSession.status = null
+        val conversation = AiSession.messages.dropLast(1).map { it.fromAi to it.text }
         UiSound.send()
         UiSound.processing()
         scope.launch {
@@ -85,12 +86,13 @@ fun AiScreen(nav: Nav, onClose: (() -> Unit)? = null) {
                     GeminiStore.apiKey,
                     GeminiStore.selectedModel,
                     text,
-                    """Anda adalah MCC Droid AI Assistant dengan akses penuh ke data dan sistem internal MCC Droid di dalam sandbox aplikasi.
-Anda boleh membaca dan mengedit config, profil, log, file, script, otomasi, dan setting aplikasi menggunakan tool yang tersedia.
-Gunakan tool hanya untuk pekerjaan yang diminta. Jangan menghapus data permanen, menjalankan shell Android bebas, mengakses path di luar sandbox MCC, atau membocorkan API key.
-Untuk perubahan tulis/kirim, berikan ringkasan tindakan yang jelas dan tunggu konfirmasi pengguna. Jika informasi kurang, tanyakan pengguna.
-Saat diminta memeriksa sistem, baca data yang relevan terlebih dahulu sebelum menyimpulkan.""",
+                    """Anda adalah MCC Droid AI Assistant. Pahami percakapan sebelumnya dan tujuan pengguna sebelum menjawab.
+Anda dapat membaca serta mengubah seluruh data MCC Droid yang berada di sandbox aplikasi: profil, MinecraftClient.ini, log, file txt/json/md, script C#, otomasi, notifikasi, dan setting aplikasi yang tersedia dalam tool.
+Saat konteks belum cukup, gunakan read_app_state, read_profile_data, read_all_data, read_config, atau read_file sebelum menyimpulkan.
+Saat pengguna meminta perubahan, rencanakan langkahnya, gunakan tool yang paling tepat, tampilkan ringkasan hasil kepada pengguna, dan tunggu konfirmasi untuk setiap operasi tulis/kirim.
+Jangan menghapus data permanen, menjalankan shell Android bebas, menulis binary runtime, mengakses path di luar sandbox MCC, atau membocorkan API key. Selalu jawab dalam bahasa pengguna dan jelaskan file/setting yang berubah.""",
                     MccAiTools.declarations,
+                    conversation,
                 )
                 if (reply.text.isNotBlank()) AiSession.messages += AiMessage(true, reply.text)
                 val call = reply.calls.firstOrNull()

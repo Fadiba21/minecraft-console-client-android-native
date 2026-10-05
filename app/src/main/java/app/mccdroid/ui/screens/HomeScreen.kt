@@ -142,7 +142,7 @@ fun HomeScreen(nav: Nav) {
         )
         SmallFloatingActionButton(
             onClick = { UiSound.open(); aiOpen = true },
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+            modifier = Modifier.align(Alignment.BottomStart).padding(start = 16.dp, bottom = 16.dp),
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         ) { Icon(Icons.Rounded.AutoAwesome, "Buka Gemini Assistant") }
@@ -260,12 +260,6 @@ private fun Hero(summary: Summary, count: Int, nav: Nav) {
                 Stat("Profil", count.toString())
                 Stat("Berjalan", summary.total.toString())
                 Stat("Online", summary.online.toString())
-            }
-            Spacer(Modifier.height(14.dp))
-            FilledTonalButton(onClick = { UiSound.click(); nav.sub = Sub.AI }) {
-                Icon(Icons.Rounded.AutoAwesome, null, Modifier.size(18.dp))
-                Spacer(Modifier.width(6.dp))
-                Text("Buka Gemini Assistant")
             }
         }
     }

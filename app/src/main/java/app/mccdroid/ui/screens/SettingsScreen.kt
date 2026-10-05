@@ -116,6 +116,9 @@ fun SettingsScreen(nav: Nav) {
                 SwitchRow("Bungkus baris panjang", null, AppPrefs.wrapLines) { AppPrefs.wrapLines = it }
                 SwitchRow("Tampilkan jam", null, AppPrefs.showTimestamps) { AppPrefs.showTimestamps = it }
                 SwitchRow("Simpan log ke file", "Ditulis ke logs/console.log di folder profil.", AppPrefs.saveConsoleLog) { AppPrefs.saveConsoleLog = it }
+                OutlinedButton(onClick = { nav.sub = app.mccdroid.ui.Sub.SHELL }) {
+                    Text("Buka Shell Android (advanced)")
+                }
             }
 
             GeminiSettingsCard(scope)

@@ -6,12 +6,13 @@ import app.mccdroid.logic.LineKind
 import app.mccdroid.logic.LogBuffer
 import app.mccdroid.logic.Toml
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
-import java.io.InputStreamReader
 import java.io.Writer
+import java.nio.ByteBuffer
+import java.nio.charset.CodingErrorAction
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
 import kotlin.concurrent.thread
 
@@ -104,16 +105,32 @@ class McSession(private val ctx: Context, val profileId: String) {
 
     private fun readLoop(p: Process) {
         try {
-            BufferedReader(InputStreamReader(p.inputStream, Charsets.UTF_8)).use { r ->
-                while (true) {
-                    val line = r.readLine() ?: break
-                    val l = log.append(line.trimEnd('\r'))
-                    if (AppPrefs.saveConsoleLog) appendToFile(l.clean)
-                    SessionManager.onLine(this, l.clean)
+            val input = p.inputStream.buffered()
+            val bytes = java.io.ByteArrayOutputStream()
+            while (true) {
+                val b = input.read()
+                if (b < 0) {
+                    if (bytes.size() > 0) publishDecoded(bytes.toByteArray())
+                    break
                 }
+                if (b == '\n'.code) {
+                    publishDecoded(bytes.toByteArray())
+                    bytes.reset()
+                } else if (b != '\r'.code) bytes.write(b)
             }
+            input.close()
         } catch (_: IOException) {
         }
+    }
+
+    private fun publishDecoded(raw: ByteArray) {
+        val decoder = StandardCharsets.UTF_8.newDecoder().onMalformedInput(CodingErrorAction.REPORT).onUnmappableCharacter(CodingErrorAction.REPORT)
+        val text = try { decoder.decode(ByteBuffer.wrap(raw)).toString() } catch (_: Exception) {
+            runCatching { raw.toString(Charsets.UTF_16LE) }.getOrElse { raw.toString(Charsets.ISO_8859_1) }
+        }
+        val l = log.append(text)
+        if (AppPrefs.saveConsoleLog) appendToFile(l.clean)
+        SessionManager.onLine(this, l.clean)
     }
 
     private fun onExit(code: Int) {

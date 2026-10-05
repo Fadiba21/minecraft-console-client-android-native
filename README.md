@@ -6,7 +6,7 @@
 
 ## Tentang proyek
 
-Proyek ini adalah **fork dan adaptasi Android native** dari [MCCTeam/Minecraft-Console-Client](https://github.com/MCCTeam/Minecraft-Console-Client). MCC Droid mempertahankan runtime MCC sebagai komponen inti, kemudian menambahkan antarmuka Android, pengelolaan profil, editor konfigurasi, otomasi, Gemini Assistant, Modern Chat UI, dan sound effect UI.
+Proyek ini adalah **fork dan adaptasi Android native** dari [MCCTeam/Minecraft-Console-Client](https://github.com/MCCTeam/Minecraft-Console-Client). MCC Droid mempertahankan runtime MCC sebagai komponen inti, kemudian menambahkan antarmuka Android, pengelolaan profil, editor konfigurasi, otomasi, Gemini Assistant, console MCC monospace, dan sound effect UI.
 
 Proyek ini sedang dikembangkan secara aktif. Source code, workflow build, dokumentasi, catatan progres, dan APK release tersedia di repository ini.
 
@@ -21,20 +21,18 @@ Proyek ini sedang dikembangkan secara aktif. Source code, workflow build, dokume
 - Runtime MCC diekstrak otomatis ke penyimpanan aplikasi.
 - Dukungan command MCC dan command Minecraft berbasis `/`.
 
-### Console dan Modern Chat UI
+### Console MCC
 
-Halaman Terminal menyediakan dua mode tampilan:
+Halaman Terminal sekarang murni untuk MCC dan menggunakan console monospace penuh. Shell Android dipindahkan ke **Pengaturan → Konsol → Buka Shell Android (advanced)**.
 
-- **Console**: terminal monospace untuk output mentah dan debugging.
-- **Modern Chat**: bubble chat bergaya aplikasi chat modern, dengan pesan MCC di kiri, command pengguna di kanan, pesan sistem di tengah, timestamp, warna status, dan animasi masuk.
-
-Kedua mode memiliki fungsi yang sama:
+Console MCC memiliki fungsi:
 
 - Kirim command.
 - Command history.
 - Shortcut command adaptif maksimal lima command teratas.
 - Saran command dan katalog perintah.
 - Auto-follow output.
+- Tombol `−` dan `+` kecil di kanan atas untuk mengatur ukuran teks dan menampilkan lebih banyak baris.
 - Copy baris atau seluruh log.
 - Simpan log ke folder profil.
 - Buka URL yang muncul di chat.
@@ -101,7 +99,7 @@ Satu profil memiliki folder data dan konfigurasi sendiri.
 2. Tekan tombol ▶ pada profil.
 3. Jika login Microsoft diperlukan, ikuti device code yang ditampilkan.
 4. Buka tab **Terminal**.
-5. Pilih **Console** untuk debugging mentah atau **Modern Chat** untuk tampilan chat.
+5. Gunakan console MCC untuk memantau output dan mengirim command.
 
 ### 3. Mengirim command
 
@@ -167,7 +165,7 @@ Android Activity / Jetpack Compose UI
         ├── SessionManager
         │       └── McSession → MCC BasicIO process
         │
-        ├── LogBuffer → McText → Console / Modern Chat renderer
+        ├── LogBuffer → McText → Console renderer
         │
         ├── ProfileStore / RuleStore / NotifyStore / AppPrefs
         │
@@ -185,7 +183,7 @@ Android Activity / Jetpack Compose UI
 4. Output stdout dibaca sebagai UTF-8.
 5. `McText` menormalisasi Unicode, warna Minecraft, ANSI, mojibake, dan format warna hex.
 6. `LogBuffer` mengirim batch output ke UI.
-7. Output dapat dirender sebagai Console atau Modern Chat.
+7. Output dirender sebagai console monospace dengan warna dan style server.
 
 ### Jalur Gemini
 
@@ -260,7 +258,7 @@ Fitur yang sudah tersedia:
 - Runtime MCC ARM64 di Android.
 - Profil multi-server.
 - Config editor.
-- Terminal Console dan Modern Chat.
+- Terminal Console MCC murni dengan kontrol ukuran teks.
 - Parsing warna dan perbaikan karakter rusak.
 - Shortcut command adaptif.
 - Dashboard dengan animasi.
@@ -294,7 +292,7 @@ Issue dan pull request dipersilakan. Saat melaporkan bug, sertakan:
 
 - Versi APK.
 - Versi Android dan arsitektur perangkat.
-- Mode tampilan Console atau Modern Chat.
+- Ukuran teks console dan jenis encoding/format server yang digunakan.
 - Langkah reproduksi.
 - Potongan log yang sudah disensor dari API key, password, token, dan data pribadi.
 

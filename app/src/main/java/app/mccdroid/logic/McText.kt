@@ -28,21 +28,15 @@ object McText {
     private val URL_REGEX = Regex("https?://[^\\s<>\"')\\]]+")
     // Beberapa plugin mengirim warna sebagai &#RRGGBB / #RRGGBB, atau kehilangan
     // pemisah sehingga kode warna hex muncul sebagai token panjang di tengah chat.
-    private val PREFIXED_HEX = Regex("(?i)(?:&|#)[0-9a-f]{6}")
-    private val BARE_HEX_TOKEN = Regex("(?i)(?<![a-z0-9])(?:[0-9a-f]{12,}(?=[a-z\\s]|$)|[0-9a-f]{6}(?=[A-Z]))")
+    private val EXPLICIT_HEX = Regex("(?i)(?:&|#)[0-9a-f]{6}")
 
     /** Normalisasi escape Unicode, mojibake UTF-8, dan kontrol terminal sebelum dirender. */
     fun normalize(s: String): String {
         val unescaped = decodeUnicodeEscapes(s)
         val repaired = repairMojibake(unescaped)
-        val noPrefixedColors = repaired.replace(PREFIXED_HEX, "")
-        val bareCandidates = BARE_HEX_TOKEN.findAll(noPrefixedColors).toList()
-        // Hanya aktifkan heuristik bare-hex bila ada beberapa kandidat atau replacement
-        // character; nama/pesan normal yang kebetulan mengandung enam huruf hex tidak dihapus.
-        val noBareNoise = if (bareCandidates.size >= 2 || noPrefixedColors.contains('\uFFFD')) {
-            noPrefixedColors.replace(BARE_HEX_TOKEN, "")
-        } else noPrefixedColors
-        return noBareNoise.filter { it == '\t' || it == '\n' || it == '\r' || it == ESC || !it.isISOControl() }
+        // Jangan menghapus token hex tanpa separator: banyak server memakai angka/huruf
+        // tersebut sebagai bagian nama pemain, rank, UUID, atau pesan chat.
+        return repaired.filter { it == '\t' || it == '\n' || it == '\r' || it == ESC || !it.isISOControl() }
     }
 
     private fun decodeUnicodeEscapes(s: String): String {
@@ -74,7 +68,7 @@ object McText {
 
     /** Hapus semua kode § dan urutan ANSI. */
     fun strip(s: String): String {
-        if (s.indexOf(SECTION) < 0 && s.indexOf(ESC) < 0) return s
+        if (s.indexOf(SECTION) < 0 && s.indexOf(ESC) < 0 && !s.contains(Regex("(?i)(?:#|&)[0-9a-f]{6}"))) return s
         val sb = StringBuilder(s.length)
         var i = 0
         while (i < s.length) {
@@ -83,6 +77,8 @@ object McText {
                 // Dukungan tambahan untuk format legacy non-standar: §RRGGBB.
                 i += if (i + 6 < s.length && s.substring(i + 1, i + 7).isHexColor()) 7
                 else if (i + 1 < s.length) 2 else 1
+            } else if ((c == '#' || c == '&') && i + 6 < s.length && s.substring(i + 1, i + 7).isHexColor()) {
+                i += 7
             } else if (c == ESC) {
                 i = skipAnsi(s, i)
             } else {
@@ -166,8 +162,13 @@ object McText {
                         flush()
                         color = null; bold = false; italic = false; underline = false; strike = false
                     }
-                    else -> { /* 'k' (acak) dan kode tak dikenal diabaikan */ }
+                    'k' -> { flush(); bold = true }
+                    else -> { buf.append(SECTION).append(s[i - 1]); }
                 }
+            } else if ((c == '#' || c == '&') && i + 6 < s.length && s.substring(i + 1, i + 7).isHexColor()) {
+                flush()
+                color = s.substring(i + 1, i + 7).toInt(16)
+                i += 7
             } else if (c == ESC) {
                 val end = skipAnsi(s, i)
                 if (i + 1 < s.length && s[i + 1] == '[' && end > i && s[end - 1] == 'm') {

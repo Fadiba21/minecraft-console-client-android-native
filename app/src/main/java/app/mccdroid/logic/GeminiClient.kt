@@ -26,10 +26,21 @@ object GeminiClient {
         }
     }
 
-    suspend fun generate(apiKey: String, model: String, prompt: String, system: String, tools: List<Map<String, Any?>>): Reply = withContext(Dispatchers.IO) {
+    suspend fun generate(
+        apiKey: String,
+        model: String,
+        prompt: String,
+        system: String,
+        tools: List<Map<String, Any?>>,
+        history: List<Pair<Boolean, String>> = emptyList(),
+    ): Reply = withContext(Dispatchers.IO) {
+        val contents = history.takeLast(12).map { (fromAi, text) ->
+            mapOf("role" to if (fromAi) "model" else "user", "parts" to listOf(mapOf("text" to text)))
+        }.toMutableList()
+        contents += mapOf("role" to "user", "parts" to listOf(mapOf("text" to prompt)))
         val body = linkedMapOf<String, Any?>(
             "systemInstruction" to mapOf("parts" to listOf(mapOf("text" to system))),
-            "contents" to listOf(mapOf("role" to "user", "parts" to listOf(mapOf("text" to prompt)))),
+            "contents" to contents,
             "generationConfig" to mapOf("temperature" to 0.2, "maxOutputTokens" to 4096),
         )
         if (tools.isNotEmpty()) body["tools"] = listOf(mapOf("functionDeclarations" to tools))

@@ -157,12 +157,18 @@ object MccAiTools {
     private fun setAppSetting(key: String, value: String): String {
         when (key) {
             "themeMode" -> require(value in setOf("system", "dark", "light", "amoled")) { "Tema tidak valid." }.also { AppPrefs.themeMode = value }
+            "dynamicColor" -> AppPrefs.dynamicColor = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
+            "accentIdx" -> AppPrefs.accentIdx = value.toIntOrNull()?.coerceIn(0, 5) ?: error("Aksen tidak valid.")
             "consoleFontSp" -> AppPrefs.consoleFontSp = value.toFloatOrNull()?.coerceIn(9f, 20f) ?: error("Ukuran font tidak valid.")
             "maxLogLines" -> AppPrefs.maxLogLines = value.toIntOrNull()?.coerceIn(500, 10000) ?: error("Batas log tidak valid.")
             "wrapLines" -> AppPrefs.wrapLines = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
             "showTimestamps" -> AppPrefs.showTimestamps = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
             "saveConsoleLog" -> AppPrefs.saveConsoleLog = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
             "keepScreenOn" -> AppPrefs.keepScreenOn = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
+            "wakeLock" -> AppPrefs.wakeLock = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
+            "wifiLock" -> AppPrefs.wifiLock = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
+            "bootStart" -> AppPrefs.bootStart = value.toBooleanStrictOrNull() ?: error("Nilai boolean tidak valid.")
+            "heapLimitMb" -> AppPrefs.heapLimitMb = value.toIntOrNull()?.coerceIn(0, 2048) ?: error("Batas heap tidak valid.")
             else -> error("Setting aplikasi tidak diizinkan: $key")
         }
         return "Setting $key diubah."

@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Extension
-import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Settings
@@ -40,7 +39,6 @@ fun MoreScreen(nav: Nav) {
             Item(Icons.Rounded.Folder, "File & folder", "Lihat, sunting, impor/ekspor file MCC, buka di aplikasi File") { nav.sub = Sub.FILES }
             Item(Icons.Rounded.Notifications, "Notifikasi", "Kick, putus, login, pesan pribadi, jam tenang") { nav.sub = Sub.NOTIFY }
             Item(Icons.Rounded.Extension, "Mod & skrip", "Skrip C# MCC, file mod Fabric, peluncur Minecraft") { nav.sub = Sub.MODS }
-            Item(Icons.Rounded.AutoAwesome, "Gemini Assistant", "Buat config, script, file, otomasi, dan command dengan bantuan AI") { nav.sub = Sub.AI }
             Item(Icons.Rounded.Settings, "Pengaturan", "Tema, baterai, runtime, diagnostik") { nav.sub = Sub.SETTINGS }
         }
     }

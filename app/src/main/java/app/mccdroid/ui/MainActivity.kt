@@ -77,9 +77,10 @@ import app.mccdroid.ui.screens.ModsScreen
 import app.mccdroid.ui.screens.MoreScreen
 import app.mccdroid.ui.screens.NotificationsScreen
 import app.mccdroid.ui.screens.SettingsScreen
+import app.mccdroid.ui.screens.ShellScreen
 import kotlinx.coroutines.delay
 
-enum class Sub { FILES, NOTIFY, MODS, SETTINGS, AI }
+enum class Sub { FILES, NOTIFY, MODS, SETTINGS, SHELL, AI }
 
 /** Status navigasi yang dipakai bersama semua layar. */
 class Nav {
@@ -185,6 +186,7 @@ fun AppRoot(nav: Nav) {
                     Sub.NOTIFY -> NotificationsScreen(nav)
                     Sub.MODS -> ModsScreen(nav)
                     Sub.SETTINGS -> SettingsScreen(nav)
+                    Sub.SHELL -> ShellScreen(nav)
                     null -> when (page.tab) {
                         0 -> HomeScreen(nav)
                         1 -> ConsoleScreen(nav)

@@ -1,5 +1,11 @@
 # Development Progress
 
+## Milestone 7 — Console-only dan AI context update
+
+Terminal dikembalikan menjadi halaman console MCC murni. Modern Chat dihapus, Shell dipindahkan ke Pengaturan, dan kontrol ukuran teks `−/+` ditambahkan agar pengguna dapat melihat lebih banyak baris. Jalur stdout MCC sekarang membaca byte per baris dengan decoder UTF-8 strict dan fallback byte-safe. Heuristik penghapusan token hex yang dapat menghilangkan bagian nama atau pesan dihapus; format warna eksplisit tetap diparsing tanpa merusak teks biasa.
+
+Akses Gemini dari header Dashboard dan menu Lainnya dihapus. Gemini hanya dibuka melalui floating popup di sisi kiri Dashboard. Request Gemini kini menyertakan riwayat percakapan terbaru, instruksi penggunaan tool berbasis konteks, dan cakupan setting aplikasi yang lebih luas melalui confirmation flow.
+
 ## Milestone 0 — Baseline
 
 - Source MCC Droid Android Native diambil dari source kerja dan baseline patched APK.

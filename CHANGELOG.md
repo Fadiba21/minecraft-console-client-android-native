@@ -1,19 +1,26 @@
 # Changelog
 
+## Unreleased — Console-only MCC dan AI context
+
+- Menghapus Modern Chat UI dari halaman Terminal.
+- Menjadikan halaman Terminal khusus console MCC monospace.
+- Memindahkan Shell Android ke halaman terpisah dari Pengaturan.
+- Menambahkan tombol `−/+` kecil di kanan atas console untuk mengatur ukuran teks.
+- Memperbaiki pembacaan output MCC dengan decoder UTF-8 strict dan fallback byte-safe.
+- Menghapus heuristik yang sebelumnya dapat menghilangkan token huruf/angka valid dari nama pemain dan chat.
+- Menambahkan dukungan marker warna eksplisit `#RRGGBB` dan `&RRGGBB` tanpa mengorbankan teks biasa.
+- Menghapus tombol AI dari header Dashboard dan menu langsung; AI hanya dibuka melalui popup floating di kiri.
+- Menambahkan riwayat percakapan ke request Gemini agar AI memahami konteks.
+- Memperluas setting aplikasi yang dapat diubah AI melalui confirmation flow.
+
 ## 1.0.4 — Modern Chat, Gemini AI, dan soft UI sounds
 
-- Menambahkan pilihan tampilan `Console` dan `Modern Chat` di Terminal MCC.
-- Menambahkan bubble chat dengan alignment incoming/outgoing/system/error.
-- Menambahkan animasi fade dan slide untuk pesan baru.
-- Memindahkan toolbar copy/simpan/bersihkan ke atas kotak console.
-- Menambahkan Gemini Assistant sebagai popup dari Dashboard.
-- Menyimpan state chat Gemini selama proses aplikasi masih hidup.
-- Menambahkan akses AI ke data profil, config, log, file teks, otomasi, notifikasi, dan metadata runtime dalam sandbox.
-- Menambahkan tool untuk membuat/edit config, file, script, automation, setting, dan command dengan konfirmasi.
-- Memperbaiki parser Unicode, mojibake, ANSI, warna Minecraft, dan token warna hex.
-- Menambahkan shortcut command adaptif maksimal lima item.
-- Menambahkan soft UI sound pack CC0 dengan 17 cue semantik.
-- Menambahkan animasi intro, Dashboard hero, dan launcher logo yang lebih seimbang.
+- Menambahkan Modern Chat sebagai eksperimen UI. Fitur ini kemudian dihapus pada milestone Unreleased agar Terminal kembali fokus sebagai console MCC murni.
+- Menambahkan pilihan tampilan console dan Modern Chat pada milestone sebelumnya.
+- Menambahkan Gemini Assistant dari Dashboard dengan sandbox tools dan confirmation flow.
+- Menambahkan config editor, automation, notification, file manager, dan adaptive command shortcuts.
+- Menambahkan soft UI sound pack 17 cue dengan lisensi CC0.
+- Memperbaiki Unicode, mojibake, ANSI, dan warna Minecraft pada console.
 - Menambahkan runtime MCC ke APK final pada `assets/mcc-bundle.zip`.
 - Validasi final: build sukses, APK aligned, signature v2/v3 valid, runtime tersedia.
 
@@ -30,7 +37,3 @@
 
 - Baseline APK patched dengan runtime MCC.
 - Perbaikan awal konfigurasi dan packaging runtime.
-
-## Development history
-
-Repository ini dikumpulkan dari proses debugging dan pengembangan bertahap MCC Droid Android Native. Detail milestone, keputusan desain, dan validasi ada di [DEVELOPMENT_PROGRESS.md](DEVELOPMENT_PROGRESS.md).
